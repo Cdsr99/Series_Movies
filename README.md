@@ -8,11 +8,11 @@ Here is a couple things that was helpful to me:
 
 This ``Resource`` will create a couple of route to your project:
 
-``Route::get('series/index', SeriesController::class)->name('series.index');``
-``Route::get('series/show', SeriesController::class)->name('series.show');``
-``Route::get('series/create', SeriesController::class)->name('series.create');``
-``Route::get('series/store', SeriesController::class)->name('series.store');``
-``Route::get('series/destroy', SeriesController::class)->name('series.destroy');``
+``Route::get('series/index', SeriesController::class)->name('series.index');``<br>
+``Route::get('series/show', SeriesController::class)->name('series.show');``<br>
+``Route::get('series/create', SeriesController::class)->name('series.create');``<br>
+``Route::get('series/store', SeriesController::class)->name('series.store');``<br>
+``Route::get('series/destroy', SeriesController::class)->name('series.destroy');``<br>
 
 
 
