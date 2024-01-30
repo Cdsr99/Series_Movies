@@ -13,15 +13,21 @@ class SeriesController extends Controller
     {
         $series = Serie::query()->orderBy('nome')->get();
         $message = $request->session()->get('message.deleted');
-        return view('series.index')->with('series', $series)->with('message', $message);
+        $messageCreatedSeries = $request->session()->get('message.created');
+        $messageUpdatedSeries = $request->session()->get('message.updated');
+
+        return view('series.index')->with('series', $series)->with('message', $message)->with('messageCreatedSeries', $messageCreatedSeries)->with('messageUpdatedSeries',$messageUpdatedSeries);
     }
     #endregion
 
+    #region Create series
     public function create()
     {
         return view('series.create');
     }
+    #endregion
 
+    #region Inserting the series into the database
     public function store(Request $request)
     {
         $nomeSerie = $request->input('nome');
@@ -29,15 +35,44 @@ class SeriesController extends Controller
         $serie->nome = $nomeSerie;
         $serie->save();
 
-        return redirect('/series');
+        return redirect('/series')
+            ->with('message.created', 'The series ' . $nomeSerie . ' has been registed with success');
     }
+    #endregion
 
     #region Destroy the series
-    public function destroy(Request $request)
+    public function destroy(Serie $series)
     {
-        Serie::destroy($request->id);
-        $request->session()->put('message.deleted','The series has been deleted');
-        return to_route('series.index');
+        Serie::destroy($series->id);
+        return to_route('series.index')
+            ->with('message.deleted', 'The series ' . $series->nome . ' has been deleted');
+    }
+    #endregion
+
+    #region Rendering series data
+    public function update(Serie $series)
+    {
+        $select = Serie::find($series->id);
+        return view('series.update')->with('dataSeries', $select);
+    }
+    #endregion
+
+    #region Updateing Series
+    public function edit(Serie $series, Request $request)
+    {
+       $name = $request->input('nome');
+        try {
+            DB::table('series')
+                ->where('id', $series->id)
+                ->update([
+                    'nome' => $name,
+                ]);
+
+            return to_route('series.index')
+                ->with('message.updated', 'The series ' . $series->nome . ' has been updated');
+        } catch (\Exception $e) {
+            dd($e);
+        }
     }
     #endregion
 }

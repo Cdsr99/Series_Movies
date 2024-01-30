@@ -20,7 +20,10 @@ Route::get('/', function () {
 
 
 Route::resource('/series',SeriesController::class)
-->only(['index','show','create']);
+->only(['index','show','create','store','update']);
 
-Route::delete('/series/destroy/{id}',[SeriesController::class,'destroy'])->name('series.destroy');
+Route::get('/series/update/{series}',[SeriesController::class,'update'])->name('series.update');
+Route::post('/series/edit/{series}',[SeriesController::class,'edit'])->name('series.edit');
+
+Route::delete('/series/destroy/{series}',[SeriesController::class,'destroy'])->name('series.destroy');
 

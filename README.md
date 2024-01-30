@@ -1,4 +1,4 @@
-## Series
+# Series
 
 This is a project written in laravel, to participate in the alura course and practice a little. The course is called `Laravel: validando formulários, usando sessões e definindo relacionamentos`
 
@@ -16,7 +16,7 @@ This `Resource` will create a couple of route to your project:
 
 You can check it out better in the documentation.
 
-# Session and Flash messages
+## Session and Flash messages
 
 You can create a session using Request and send to your blade file. For exemple:
 
