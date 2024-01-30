@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
-    public function index()
+    #region Searching for series 
+    public function index(Request $request)
     {
         $series = Serie::query()->orderBy('nome')->get();
-
-        return view('series.index')->with('series', $series);
+        $message = $request->session()->get('message.deleted');
+        return view('series.index')->with('series', $series)->with('message', $message);
     }
+    #endregion
 
     public function create()
     {
@@ -34,6 +36,7 @@ class SeriesController extends Controller
     public function destroy(Request $request)
     {
         Serie::destroy($request->id);
+        $request->session()->put('message.deleted','The series has been deleted');
         return to_route('series.index');
     }
     #endregion

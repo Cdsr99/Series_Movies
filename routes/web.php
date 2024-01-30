@@ -15,12 +15,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return to_route('series.index');
 });
 
 
 Route::resource('/series',SeriesController::class)
 ->only(['index','show','create']);
 
-Route::post('/series/destroy/{id}',[SeriesController::class,'destroy'])->name('series.destroy');
+Route::delete('/series/destroy/{id}',[SeriesController::class,'destroy'])->name('series.destroy');
 
