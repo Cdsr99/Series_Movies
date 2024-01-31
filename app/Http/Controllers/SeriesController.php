@@ -20,7 +20,7 @@ class SeriesController extends Controller
     }
     #endregion
 
-    #region Create series
+    #region Rendering form create
     public function create()
     {
         return view('series.create');
@@ -30,6 +30,10 @@ class SeriesController extends Controller
     #region Inserting the series into the database
     public function store(Request $request)
     {
+        $request->validate([
+            'nome' => 'required|min:3|max:30'
+        ]);
+        
         $nomeSerie = $request->input('nome');
         $serie = new Serie();
         $serie->nome = $nomeSerie;

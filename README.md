@@ -43,3 +43,33 @@ In the route that redirect to the index file, you can get that request.
     }
     #endregion
 ```
+
+## Validation
+
+The function ``validation`` is a good way to make sure the user fill the input the way he needs to.
+
+Use these codes bellow:
+
+Controller
+
+```shell
+        $request->validate([
+            'nome' => 'required|min:3|max:30'
+        ]);
+```
+
+Blade
+
+```shell
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+```
+
+P.s: Its good to put that good in some layout file.
