@@ -15,15 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return to_route('series.index');
+    return redirect('/series');
 });
 
-
-Route::resource('/series',SeriesController::class)
-->only(['index','show','create','store','update']);
-
-Route::get('/series/update/{series}',[SeriesController::class,'update'])->name('series.update');
-Route::post('/series/edit/{series}',[SeriesController::class,'edit'])->name('series.edit');
-
-Route::delete('/series/destroy/{series}',[SeriesController::class,'destroy'])->name('series.destroy');
-
+Route::resource('/series', SeriesController::class)
+    ->except(['show']);

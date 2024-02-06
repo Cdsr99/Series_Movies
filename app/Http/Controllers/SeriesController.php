@@ -2,81 +2,54 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SeriesFormRequest;
 use App\Models\Serie;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class SeriesController extends Controller
 {
-    #region Searching for series 
     public function index(Request $request)
     {
-        $series = Serie::query()->orderBy('nome')->get();
-        $message = $request->session()->get('message.deleted');
-        $messageCreatedSeries = $request->session()->get('message.created');
-        $messageUpdatedSeries = $request->session()->get('message.updated');
+        $series = Serie::all();
+        $mensagemSucesso = session('mensagem.sucesso');
 
-        return view('series.index')->with('series', $series)->with('message', $message)->with('messageCreatedSeries', $messageCreatedSeries)->with('messageUpdatedSeries',$messageUpdatedSeries);
+        return view('series.index')->with('series', $series)
+            ->with('mensagemSucesso', $mensagemSucesso);
     }
-    #endregion
 
-    #region Rendering form create
     public function create()
     {
         return view('series.create');
     }
-    #endregion
 
-    #region Inserting the series into the database
-    public function store(Request $request)
+    public function store(SeriesFormRequest $request)
     {
-        $request->validate([
-            'nome' => 'required|min:3|max:30'
-        ]);
-        
-        $nomeSerie = $request->input('nome');
-        $serie = new Serie();
-        $serie->nome = $nomeSerie;
-        $serie->save();
+        $serie = Serie::create($request->all());
 
-        return redirect('/series')
-            ->with('message.created', 'The series ' . $nomeSerie . ' has been registed with success');
+        return to_route('series.index')
+            ->with('mensagem.sucesso', "Série '{$serie->nome}' adicionada com sucesso");
     }
-    #endregion
 
-    #region Destroy the series
     public function destroy(Serie $series)
     {
-        Serie::destroy($series->id);
+        $series->delete();
+
         return to_route('series.index')
-            ->with('message.deleted', 'The series ' . $series->nome . ' has been deleted');
+            ->with('mensagem.sucesso', "Série '{$series->nome}' removida com sucesso");
     }
-    #endregion
 
-    #region Rendering series data
-    public function update(Serie $series)
+    public function edit(Serie $series)
     {
-        $select = Serie::find($series->id);
-        return view('series.update')->with('dataSeries', $select);
+        return view('series.edit')->with('serie', $series);
     }
-    #endregion
 
-    #region Updateing Series
-    public function edit(Serie $series, Request $request)
+    public function update(Serie $series, SeriesFormRequest $request)
     {
-       $name = $request->input('nome');
-        try {
-            DB::table('series')
-                ->where('id', $series->id)
-                ->update([
-                    'nome' => $name,
-                ]);
+        $series->fill($request->all());
+        $series->save();
 
-            return to_route('series.index')
-                ->with('message.updated', 'The series ' . $series->nome . ' has been updated');
-        } catch (\Exception $e) {
-            dd($e);
-        }
+        return to_route('series.index')
+            ->with('mensagem.sucesso', "Série '{$series->nome}' atualizada com sucesso");
     }
-    #endregion
 }
